@@ -185,5 +185,30 @@ namespace RefactorProgram
             }
             return informations;
         }
+
+        public string GetHostByName(string name)
+        {
+            IPHostEntry hostInfo = Dns.GetHostByName(name);
+            // Get the IP address list that resolves to the host names contained in the 
+            // Alias property.
+            IPAddress[] address = hostInfo.AddressList;
+            // Get the alias names of the addresses in the IP address list.
+            String[] alias = hostInfo.Aliases;
+
+            StringBuilder s = new StringBuilder();
+
+            s.AppendLine("Host name : " + hostInfo.HostName);
+            s.AppendLine("\nAliases : ");
+            for (int index = 0; index < alias.Length; index++)
+            {
+                s.AppendLine(alias[index]);
+            }
+            s.AppendLine("\nIP address list : ");
+            for (int index = 0; index < address.Length; index++)
+            {
+                s.AppendLine(address[index].ToString());
+            }
+            return s.ToString();
+        }
     }
 }

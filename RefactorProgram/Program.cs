@@ -15,73 +15,120 @@ namespace RefactorProgram
     {
         static void Main()
         {
-            IPAddress[] array = Dns.GetHostAddresses("en.wikipedia.org");
-            foreach (IPAddress ip in array)
-            {
-                Console.WriteLine(ip.ToString());
-            }
-
             NetworkManager nm = new NetworkManager();
-
-
-            nm.LocalPing();
-            Console.WriteLine("start");
-            string t = nm.GetHostnameFromIp("8.8.8.8");
-            Console.WriteLine(t);
-            Console.WriteLine("slut");
-            string adr = nm.GetIpFromHostname(t);
-            Console.WriteLine("Weee " + adr);
-
-
-
-            string a = nm.Traceroute("8.8.8.8");
-            Console.WriteLine("route*** " + a);
-
-            List<string> informations = nm.DisplayDhcpServerAddresses();
-            if (informations.Count > 0)
+            List<string> options = new List<string>()
             {
-                foreach (string information in informations)
-                {
-                    Console.WriteLine(information);
-                }
+                "1: Get host address",
+                "2: Make a local ping",
+                "3: Get hostname from IP",
+                "4: Perform a traceroute",
+                "5: Display the DHCP servers",
+                "6: Get a host by name"
+
+            };
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("Select an option...");
                 Console.WriteLine();
+                Console.WriteLine();
+                foreach (string option in options)
+                {
+                    Console.WriteLine(option);
+                }
+                try
+                {
+                    Menu(int.Parse(Console.ReadLine()), nm);
+                }
+                catch (Exception)
+                {
+                }
             }
-
-            Console.ReadKey();
-            //WIN-M69SG2Q0732.test.local
-            //ZBC-RG01203MKC
-            string hostName = "ZBC-RG01203MKC";
-            IPHostEntry hostInfo = Dns.GetHostByName(hostName);
-            // Get the IP address list that resolves to the host names contained in the 
-            // Alias property.
-            IPAddress[] address = hostInfo.AddressList;
-            // Get the alias names of the addresses in the IP address list.
-            String[] alias = hostInfo.Aliases;
-
-            Console.WriteLine("Host name : " + hostInfo.HostName);
-            Console.WriteLine("\nAliases : ");
-            for (int index = 0; index < alias.Length; index++)
-            {
-                Console.WriteLine(alias[index]);
-            }
-            Console.WriteLine("\nIP address list : ");
-            for (int index = 0; index < address.Length; index++)
-            {
-                Console.WriteLine(address[index]);
-            }
-            Console.ReadKey();
-
         }
 
-        
+        static void Menu(int input, NetworkManager nm)
+        {
+            switch (input)
+            {
+                case 1:
+                    Console.WriteLine("Enter a host address - (en.wikipedie.org)");
+                    IPAddress[] array = Dns.GetHostAddresses(Console.ReadLine());
+                    foreach (IPAddress ip in array)
+                    {
+                        Console.WriteLine(ip.ToString());
+                    }
+                    GoBack();
+                    break;
+                case 2:
+                    nm.LocalPing();
+                    GoBack();
+                    break;
+                case 3:
+                    Console.WriteLine("Enter IP"); try
+                    {
+                        string t = nm.GetHostnameFromIp(Console.ReadLine());
+                        Console.WriteLine(t);
+                        string adr = nm.GetIpFromHostname(t);
+                        Console.WriteLine("Weee " + adr);
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine("Something went wrong");
+                    }
+                    GoBack();
+                    break;
+                case 4:
+                    Console.WriteLine("Enter an IP address or hostname");
+                    try
+                    {
+                        string a = nm.Traceroute("8.8.8.8");
+                        Console.WriteLine("route*** " + a);
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine("Something went wrong");
+                    }
+                    GoBack();
+                    break;
+                case 5:
+                    List<string> informations = nm.DisplayDhcpServerAddresses();
+                    if (informations.Count > 0)
+                    {
+                        foreach (string information in informations)
+                        {
+                            Console.WriteLine(information);
+                        }
+                        Console.WriteLine();
+                    }
+                    GoBack();
+                    break;
+                case 6:
+                    Console.WriteLine("Enter a hostname");
+                    nm.GetHostByName(Console.ReadLine());
+                    GoBack();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        static void GoBack()
+        {
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("Press any key to return ...");
+            Console.ReadKey();
+        }
 
 
-       
 
-        
 
-        
 
-        
+
+
+
+
+
+
     }
 }
